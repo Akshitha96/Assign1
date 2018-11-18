@@ -25,6 +25,14 @@ Porifera <- read_tsv("http://www.boldsystems.org/index.php/API_Public/combined?t
 #Next we extract only the BIN (bin_uri) and the country of each sample
 PoriferaBINCountry <- Porifera[,c("bin_uri","country")]
 
+#It's a nice thing to  check the amount of missing data.For that we can use the vim package
+install.packages("VIM")
+library(VIM)
+#'aggr' plots the amount of missing/imputed values in each column
+aggr(PoriferaBINCountry)
+
+#This gives a plot,through this we can see that there were some missing values in the dataset which are red in color and observed values are blue in color
+
 #Since we are clusterings countries based on the BINs, data that do not have information on the country or BIN are not useful
 #to this analysis
 #Thus data that contain NA in either bin_uri and country are removed using filter()
@@ -38,6 +46,14 @@ PoriferaBINCountry <- PoriferaBINCountry %>%
   count(bin_uri) %>%
   arrange(desc(n)) %>%
   print()
+  
+#Now again we will check for missing data
+aggr(PoriferaBINCountry)
+
+#After trimming the data,the PoriferaBINCountry dataset has no missing values.
+
+#Let's get a summary of the data to get an idea of what you are dealing with
+summary(PoriferaBINCountry)
 
 #The vegan package needs to be loaded into R, as we will be using the k-means clustering function from this package
 library(vegan)
@@ -137,6 +153,9 @@ PoriferaRich
 
 #Now let's plot the species richness
 plot(PoriferaRich)
+
+plot(PoriferaRich, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue")
+#This line gives color to the species richness plot.
 
 #This plot compares each estimate of richness (eg. you can compare the upper and lower bound estimates)
 
